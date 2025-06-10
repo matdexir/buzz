@@ -85,6 +85,7 @@ fn handleFileOpenError(ctx: *api.NativeCtx, err: anytype) void {
         => ctx.vm.pushErrorEnum("errors.FileSystemError", @errorName(err)),
 
         error.PermissionDenied,
+        error.ProcessNotFound,
         => ctx.vm.pushErrorEnum("errors.ExecError", @errorName(err)),
 
         error.Unexpected => ctx.vm.pushError("errors.UnexpectedError", null),
@@ -202,7 +203,7 @@ pub export fn FileReadAll(ctx: *api.NativeCtx) callconv(.c) c_int {
         else
             @intCast(max_size.integer()),
         null,
-        @alignOf(u8),
+        std.mem.Alignment.of(u8),
         null,
     ) catch |err| {
         handleFileReadWriteError(ctx, err);

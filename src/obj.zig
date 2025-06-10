@@ -4907,7 +4907,13 @@ pub const ObjTypeDef = struct {
 
     fn toStringRaw(self: *const Self, writer: anytype, qualified: bool) (Allocator.Error || std.fmt.BufPrintError)!void {
         switch (self.def_type) {
-            .Generic => try writer.print("generic type #{}-{}", .{ self.resolved_type.?.Generic.origin, self.resolved_type.?.Generic.index }),
+            .Generic => try writer.print(
+                "generic type #{}-{}",
+                .{
+                    self.resolved_type.?.Generic.origin,
+                    self.resolved_type.?.Generic.index,
+                },
+            ),
             .UserData => try writer.writeAll("ud"),
             .Bool => try writer.writeAll("bool"),
             .Integer => try writer.writeAll("int"),
